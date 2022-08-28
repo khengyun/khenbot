@@ -1,7 +1,6 @@
 import os
 import discord
 from discord.ext import commands
-import os
 from googleapiclient.discovery import build
 from replit import db
 from keep_alive import keep_alive
@@ -31,14 +30,14 @@ api_key = "AIzaSyDTZlrARJTPUQG4wBxzlhWiwb1-1iC0fk8"
 async def help(ctx):
     if ctx:
         em = discord.Embed(title="☠☠☠☠☠LỆNH CÓ THỂ SỬ DỤNG ☠☠☠☠☠ ",
-                           description="Sử dụng : kg>lệnh<",
+                           description="(～￣▽￣)～ " + f'{len(client.guilds)}'+" servers connected",
                            color=discord.Color.green())
 
         em.add_field(name="👉 Lệnh xem ảnh theo yêu cầu 👌 ",
                      value="Lệnh: pic (tên ảnh)\nVd: kgpic mèo")
 
-        em.add_field(name="👉 Lệnh xem ảnh gái🤪👌", value="Lệnh: kgg18 ")
-        em.add_field(name="👉 Lệnh xem clip gái🤪👌", value="Lệnh: kgc18")
+        em.add_field(name="👉 Lệnh xem ảnh gái👌", value="Lệnh: kgg18 ")
+        em.add_field(name="👉 Lệnh xem clip gái👌", value="Lệnh: kgc18")
 
         em.add_field(
             name="👉 Lệnh dịch thuật👌",
@@ -56,7 +55,7 @@ async def help(ctx):
 
         em.add_field(
             name="👑..........Khag..........👑  ",
-            value="🤘 Facebook : @niraoito \n " + f' stay in {len(client.guilds)} server' + " \n🤘Discord :<@!486547289683525652> ")
+            value="🤘 Facebook : [@niraoitoo](https://www.facebook.com/niraitoo) " + " \n🤘Discord :<@!486547289683525652> ")
 
         await ctx.send(embed=em)
     else:
@@ -109,19 +108,23 @@ async def cat(ctx):
 
 
 @client.command()
-async def clear(ctx, amount=2):
+async def clear(ctx, amount=3):
+    # admin_user = []
+    admin_user = ["486547289683525652"]
     try:
-        if str(ctx.message.author.id) == ("486547289683525652"):
-            await ctx.channel.purge(limit=amount)
-        if str(ctx.message.author.id) == ("442669164549898240"):
-            await ctx.channel.purge(limit=amount)
-        if str(ctx.message.author.id) == ("407781109590392832"):
-            await ctx.channel.purge(limit=amount)
-    except:
-        await ctx.send(
-            "Lệnh này hiện tại chỉ dành cho \n<@!486547289683525652>\n<@!442669164549898240>\n<@!407781109590392832>"
-        )
+        if str(ctx.message.author.id)  in admin_user:
+          await ctx.channel.purge(limit=amount)
+        else:
+          if amount>10:
+            await ctx.send("Bị giới hạn ở 10.\nLiên hệ chi tiết Creator:<@!486547289683525652> ")
+            
+        #   await ctx.send(
+        #     "Lệnh này hiện tại chỉ dành cho \nCreator:<@!486547289683525652>"
+        # )
 
+    except:
+        await ctx.send("Đã xảy ra lỗi, thử lại sau!!!")
+        
 
 @client.command(aliases=["trans"])
 async def translate(ctx, lang, *, args):
@@ -174,7 +177,8 @@ async def showboy(ctx):
 async def tik(ctx):
     ran = random.randint(1, 19)
 
-    await ctx.send(file=discord.File("tiktok/" + str(ran) + ".mp4"))
+    # await ctx.send(file=discord.File("tiktok/" + str(ran) + ".mp4"))
+    await ctx.send("Lệnh này đang thuộc giai đoạn beta")
 
 
 @client.command(aliases=["c18"])
@@ -188,161 +192,7 @@ async def showclip(ctx):
         await ctx.send(msg)
 
 
-player1 = ""
-player2 = ""
-turn = ""
-gameOver = True
 
-board = []
-
-winningConditions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7],
-                     [2, 5, 8], [0, 4, 8], [2, 4, 6]]
-
-
-@client.command()
-async def caro(ctx, p1: discord.Member, p2: discord.Member):
-    global count
-    global player1
-    global player2
-    global turn
-    global gameOver
-
-    if gameOver:
-        global board
-        board = [
-            ":white_large_square:", ":white_large_square:",
-            ":white_large_square:", ":white_large_square:",
-            ":white_large_square:", ":white_large_square:",
-            ":white_large_square:", ":white_large_square:",
-            ":white_large_square:"
-        ]
-        turn = ""
-        gameOver = False
-        count = 0
-
-        player1 = p1
-        player2 = p2
-
-        # print the board
-        line = ""
-        for x in range(len(board)):
-            if x == 2 or x == 5 or x == 8:
-                line += " " + board[x]
-                await ctx.send(line)
-                line = ""
-            else:
-                line += " " + board[x]
-
-        # determine who goes first
-        num = random.randint(1, 2)
-        if num == 1:
-            turn = player1
-            await ctx.send("Đây là lượt của <@" + str(player1.id) + ">")
-        elif num == 2:
-            turn = player2
-            await ctx.send("Đây là lượt của <@" + str(player2.id) + ">")
-    else:
-        await ctx.send(
-            "Có 1 trận đấu đang diễn ra , đợi nó kết thúc trước khi bắt đầu trận mới!!!"
-        )
-
-
-@client.command()
-async def place(ctx, pos: int):
-    global turn
-    global player1
-    global player2
-    global board
-    global count
-    global gameOver
-
-    if not gameOver:
-        mark = ""
-        if turn == ctx.author:
-            if turn == player1:
-                mark = ":regional_indicator_x:"
-            elif turn == player2:
-                mark = ":o2:"
-            if 0 < pos < 10 and board[pos - 1] == ":white_large_square:":
-                board[pos - 1] = mark
-                count += 1
-
-                # print the board
-                line = ""
-                for x in range(len(board)):
-                    if x == 2 or x == 5 or x == 8:
-                        line += " " + board[x]
-                        await ctx.send(line)
-                        line = ""
-                    else:
-                        line += " " + board[x]
-
-                checkWinner(winningConditions, mark)
-                print(count)
-                if gameOver == True:
-                    await ctx.send(mark + " đã thắng!")
-                elif count >= 9:
-                    gameOver = True
-                    await ctx.send("!!!Hòa rồi !!!")
-
-                # switch turns
-                if turn == player1:
-                    turn = player2
-                elif turn == player2:
-                    turn = player1
-            else:
-                await ctx.send(
-                    "Đảm bảo chọn một số nguyên từ 1 đến 9 (bao gồm) và một ô chưa được đánh dấu."
-                )
-        else:
-            await ctx.send("không phải lượt của bạn.")
-    else:
-        await ctx.send("Làm ơn sử dụng lệnh kgcaro để bắt đầu trận mới")
-
-
-def checkWinner(winningConditions, mark):
-    global gameOver
-    for condition in winningConditions:
-        if board[condition[0]] == mark and board[
-                condition[1]] == mark and board[condition[2]] == mark:
-            gameOver = True
-
-
-@caro.error
-async def tictactoe_error(ctx, error):
-    print(error)
-    if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("Hãy mention 2 người chơi để bắt đầu ván đấu.")
-    elif isinstance(error, commands.BadArgument):
-        await ctx.send(
-            "Hãy chắc chắn rằng bạn đã mention hoặc ping 2 người chơi!!!")
-
-
-@place.error
-async def place_error(ctx, error):
-    if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("Làm ơn hãy chọn điểm mà bạn muốn đánh dấu")
-    elif isinstance(error, commands.BadArgument):
-        await ctx.send("Chắc chắn rằng bạn đã chọn 1 số nguyên tố")
-
-
-@client.command()
-async def guess(ctx):
-
-    await ctx.send("đoán số từ 1 đến 10")
-
-    numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-    choice = random.choice(numbers)
-
-    answer = await client.wait_for("message")
-
-    try:
-        if answer.content == choice:
-            await ctx.send("Đoán đúng rồi đấy haha")
-        else:
-            await ctx.send(f"Sai rồi số được chọn là {choice}")
-    except:
-        pass
 
 
 keep_alive()
