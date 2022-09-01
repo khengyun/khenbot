@@ -12,7 +12,6 @@ class Help(commands.Cog):
         for guilds in self.client.guilds:
             print(guilds.members)
         print("========================")
-        
     @commands.command(allias="halp")
     async def help(self,ctx):
             em = discord.Embed(title="Notification",

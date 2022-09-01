@@ -6,7 +6,6 @@ from discord.ext import commands
 class EventVoice(commands.Cog):
     def __init__(self, client):
         self.client  = client
-    
     #   MAKE MORE VOICE 
     @commands.Cog.listener()
     async def on_voice_state_update(self,member,before,after):
@@ -16,9 +15,6 @@ class EventVoice(commands.Cog):
                 category = discord.utils.get(guild.categories, name="person voice")
                 if category is None:
                     category = await guild.create_category('person voice') 
-            
-            
-
             for check_channel in self.client.guilds:
                 check_channel = discord.utils.get(guild.voice_channels, name=f"{member.display_name} Channel") 
                 if check_channel is not None:
